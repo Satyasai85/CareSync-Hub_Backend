@@ -5,7 +5,7 @@ import dotenv from "dotenv";
 import { db, transaction } from "./db.js";
 import { requireRole } from "./middleware/auth.js";
 import { csvEscape, isDate, isTime, required, toCsv } from "./utils.js";
-import "./seed.js";
+import { seedDemoData } from "./seed.js";
 
 dotenv.config();
 
@@ -18,6 +18,8 @@ const allowedOrigins = new Set([
   "http://127.0.0.1:5173",
   "https://care-sync-hub-frontend.vercel.app"
 ]);
+
+seedDemoData();
 
 app.use(cors({
   origin(origin, callback) {
@@ -56,6 +58,10 @@ app.get("/", (_req, res) => {
     status: "ok",
     health: "/api/health"
   });
+});
+
+app.post("/api/seed-demo", requireRole("admin"), (_req, res) => {
+  res.json({ message: "Seed data ready.", counts: seedDemoData() });
 });
 
 app.get("/api/users", requireRole("admin", "receptionist", "doctor"), (req, res) => {
