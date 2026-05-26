@@ -15,7 +15,7 @@ const allowedOrigins = new Set([frontendUrl, "http://localhost:5173", "http://12
 
 app.use(cors({
   origin(origin, callback) {
-    if (!origin || allowedOrigins.has(origin)) return callback(null, true);
+    if (!origin || allowedOrigins.has(origin) || origin.endsWith(".vercel.app")) return callback(null, true);
     return callback(new Error("Not allowed by CORS"));
   }
 }));
