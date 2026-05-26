@@ -14,7 +14,9 @@ services:
       - key: DATABASE_FILE
         value: /var/data/caresync.sqlite
       - key: FRONTEND_URL
-        value: http://localhost:5173
+        value: https://care-sync-hub-frontend.vercel.app
+      - key: DEMO_PASSWORD
+        value: demo123
     disk:
       name: caresync-hub-data
       mountPath: /var/data

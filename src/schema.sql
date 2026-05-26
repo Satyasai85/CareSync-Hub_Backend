@@ -17,6 +17,17 @@ CREATE TABLE IF NOT EXISTS doctors (
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
+CREATE TABLE IF NOT EXISTS patient_profiles (
+  user_id INTEGER PRIMARY KEY,
+  age INTEGER,
+  gender TEXT,
+  blood_group TEXT,
+  address TEXT,
+  emergency_contact TEXT,
+  allergies TEXT,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
 CREATE TABLE IF NOT EXISTS availability (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   doctor_id INTEGER NOT NULL,
@@ -50,6 +61,9 @@ WHERE status NOT IN ('Cancelled', 'Rescheduled');
 
 CREATE INDEX IF NOT EXISTS idx_appointments_filters
 ON appointments(doctor_id, patient_id, appointment_date, status);
+
+CREATE INDEX IF NOT EXISTS idx_availability_lookup
+ON availability(doctor_id, day_of_week, is_active);
 
 CREATE TABLE IF NOT EXISTS medical_records (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
