@@ -5,13 +5,19 @@ import dotenv from "dotenv";
 import { db, transaction } from "./db.js";
 import { requireRole } from "./middleware/auth.js";
 import { csvEscape, isDate, isTime, required, toCsv } from "./utils.js";
+import "./seed.js";
 
 dotenv.config();
 
 const app = express();
 const port = Number(process.env.PORT || 5000);
 const frontendUrl = process.env.FRONTEND_URL || "http://localhost:5173";
-const allowedOrigins = new Set([frontendUrl, "http://localhost:5173", "http://127.0.0.1:5173"]);
+const allowedOrigins = new Set([
+  frontendUrl,
+  "http://localhost:5173",
+  "http://127.0.0.1:5173",
+  "https://care-sync-hub-frontend.vercel.app"
+]);
 
 app.use(cors({
   origin(origin, callback) {
@@ -42,6 +48,14 @@ function validateAppointment(body) {
 
 app.get("/api/health", (_req, res) => {
   res.json({ status: "ok", database: "sqlite" });
+});
+
+app.get("/", (_req, res) => {
+  res.json({
+    name: "CareSync Hub API",
+    status: "ok",
+    health: "/api/health"
+  });
 });
 
 app.get("/api/users", requireRole("admin", "receptionist", "doctor"), (req, res) => {
